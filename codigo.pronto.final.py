@@ -1,16 +1,43 @@
-import os
-import webbrowser
-login_cpf=[]
-login_senha=[]
-login_nome=[]
-login_telefone=[]
-regiao=0
+import os  # BIBLIOTECA PARA LIMPAR CONSOLE
+import webbrowser  # BIBLIOTECA PARA REDICEIONAR PARA WEB
+
+# declaração de variáveis
+login_cpf = []
+login_senha = []
+login_nome = []
+login_telefone = []
+regiao = 0
 kwh = 0
 kwhTotal = 0
 valorTotal = 0
 
+
+objetos = []
+consumoObjetos = {}
+
+# PRINTAR A BANDEIRA DE CONSUMO DA REGIÃO
+
+
+def printBandeira(Bandeira):
+    print('A BANDEIRA DESSA REGIÃO É', Bandeira)
+    print("="*30)
+
+# ADICIONAR OBJETOS NO DICIONARIO E NA ARRAY
+
+
+def addObjeto():
+    nomeaux = str(input('Qual o nome do objeto? \nresposta: '))
+    consumoaux = int(
+        input('Qual o consumo em kwh do eletrodomestico? \n resposta:'))
+
+# Adicionando ao array e ao dicionário
+    objetos.append(nomeaux)
+    consumoObjetos[nomeaux] = consumoaux
+
+
 # armazenando os objetos em um array e o consumo deles em uma estrutura chamada dicionario(procura no google)
-objetos=['GELADEIRA','FORNO ELETRICO','AIR FRYER','TELEVISÃO','VENTILADOR','AR-CONDICIONADO','CHUVEIRO ELETRICO','FREEZER','COMPUTADOR','LAMPADA','CARREGADOR','CAFETEIRA', 'CHURRASQUEIRA ELETRICA','BOMBA DE ÁGUA', 'ASPIRADOR DE PÓ', 'SECADOR DE CABELO', 'FERRO ELETRICO','MÁQUINA DE LAVAR ROUPA','IMPRESSORA']
+objetos = ['ADICONAR ELETRODOMESTICO', 'FORNO ELETRICO', 'AIR FRYER', 'TELEVISÃO', 'VENTILADOR', 'AR-CONDICIONADO', 'CHUVEIRO ELETRICO', 'FREEZER', 'COMPUTADOR', 'LAMPADA',
+    'CARREGADOR', 'CAFETEIRA', 'CHURRASQUEIRA ELETRICA', 'BOMBA DE ÁGUA', 'ASPIRADOR DE PÓ', 'SECADOR DE CABELO', 'FERRO ELETRICO', 'MÁQUINA DE LAVAR ROUPA', 'IMPRESSORA', 'GELADEIRA']
 consumoObjetos = {
     'GELADEIRA': 250,
     'FORNO ELETRICO': 6000,
@@ -24,35 +51,41 @@ consumoObjetos = {
     'LAMPADA': 12,
     'CARREGADOR': 3,
     'CAFETEIRA': 600,
-    'CHURRASQUEIRA ELETRICA':3000,
-    'BOMBA DE ÁGUA':400,
-    'ASPIRADOR DE PÓ':600,
-    'SECADOR DE CABELO':1000,
-    'FERRO ELETRICO':1000,
-    'MÁQUINA DE LAVAR ROUPA':1000,
-    'IMPRESSORA':45
+    'CHURRASQUEIRA ELETRICA': 3000,
+    'BOMBA DE ÁGUA': 400,
+    'ASPIRADOR DE PÓ': 600,
+    'SECADOR DE CABELO': 1000,
+    'FERRO ELETRICO': 1000,
+    'MÁQUINA DE LAVAR ROUPA': 1000,
+    'IMPRESSORA': 45
+
 }
 
+# MOSTRA O MENU INICIAL NO CONSOLE
 
 
-opc=0
-while opc!=3:
-  print('='*25)
-  print('\033[36mBEM VINDO AO GREEN ENERGY\033[m')
-  print('='*25)
-  
-  print('''
-  [1] LOGIN
-  [2] CADASTRAR
-  [3] SAIR''')
+def mostrarMenu1():
+    print('='*25)
+    print('\033[36mBEM VINDO AO GREEN ENERGY\033[m')
+    print('='*25)
 
-  opc=int(input('Escolha uma opção: '))
+    print('''
+    [1] LOGIN
+    [2] CADASTRAR
+    [3] SAIR''')
+
+
+opc = 0
+while opc != 3:
+  mostrarMenu1()
+
+  opc = int(input('Escolha uma opção: '))
   os.system('cls')
 
-#USUARIO COM O LOGIN FEITO ENTRA NO PROGRAMA
-  if opc==1:
-    cpf=str(input('DIGITE O SEU CPF: '))
-    senha=int(input('DIGITE SUA SENHA:\n(SOMENTE NUMEROS) '))
+# USUARIO COM O LOGIN FEITO ENTRA NO PROGRAMA
+  if opc == 1:
+    cpf = str(input('DIGITE O SEU CPF: '))
+    senha = int(input('DIGITE SUA SENHA:\n(SOMENTE NUMEROS) '))
     if cpf in login_cpf:
       if senha in login_senha:
         os.system('cls')
@@ -65,125 +98,167 @@ while opc!=3:
                 [1] ADICIONAR ELETRODOMESTICO
                 [2] VERIFICAR CONSUMO TOTAL
                 [3] SAIR''')
-            opeletro=int(input('\nResposta: '))
-            if opeletro==1:
+            opeletro = int(input('\nResposta: '))
+            if opeletro == 1:
                 os.system('cls')
-                if regiao==1:
-                    Bandeira=1
-                    print(Bandeira)    
-                    print("="*30)
-                    
+                if regiao == 1:
+                    Bandeira = 1
+                    printBandeira(Bandeira)
+
+                    for i in range(1, len(objetos)):
+                        print(i, ": ", objetos[i])
+                    resp = int(input(
+                        '\nAdicone um dos eletrodomesticos da lista ou \033[33mdigite 0 para adicionar um novo: \033[m'))
+                    objeto = objetos[resp]
+
+                    if resp == 0:
+                        print('\nMENU ADICIONAR OBJETO')
+                        addObjeto()
+                    else:
+
+                        horas = int(
+                            input(f'Quantas horas por dia {objeto.lower()} fica ligado ? '))
+                        kwh = ((consumoObjetos[objeto] * 0.003) * horas)
+                        kwhTotal += kwh
+                        formulaValor = Bandeira * kwh
+                        valorTotal += formulaValor
+                        os.system('cls')
+
+                # FUNÇAO QUE NAO PERMITE QUE O USUARIO USE + QUE 24 HORAS
+                        if horas > 24:
+                            print(
+                                '\033[31mSELECIONE UMA QUANTIDADE DE HORAS VÁLIDA (DE 0 A 24)\033[m')
+                            break
+
+                        print(
+                            f'A(o) {objeto.lower()} consumiu {kwh:.4f} kw e custou um total de {formulaValor:.2f} reais')
+                elif regiao == 2:
+                    Bandeira = 1.41473
+                    printBandeira(Bandeira)
+
                     for i in range(len(objetos)):
-                        print(i,": ",objetos[i])
-                    resp=int(input('\nAdicone os eletrodomesticos da lista: '))
-                    objeto=objetos[resp]
+                        print(i, ": ", objetos[i])
+                    resp = int(input(
+                        '\nAdicone um dos eletrodomesticos da lista ou \033[33mdigite 0 para adicionar um novo: \033[m'))
+                    objeto = objetos[resp]
 
-                    horas = int(input(f'Quantas horas por dia {objeto.lower()} fica ligado ? '))
-                    kwh = ((consumoObjetos[objeto] * 0.003) * horas)
-                    kwhTotal += kwh
-                    formulaValor = Bandeira * kwh
-                    valorTotal += formulaValor
-                    os.system('cls')
+                    if resp == 0:
+                        print('\nMENU ADICIONAR OBJETO')
+                        addObjeto()
+                    else:
 
-                #FUNÇAO QUE NAO PERMITE QUE O USUARIO USE + QUE 24 HORAS
-                    if horas > 24:
-                        print('\033[31mSELECIONE UMA QUANTIDADE DE HORAS VÁLIDA (DE 0 A 24)\033[m')
-                        break
-                   
-                    print(f'A(o) {objeto.lower()} consumiu {kwh:.4f} kw e custou um total de {formulaValor:.2f} reais')
-                elif regiao==2:
-                    Bandeira=1.41473
-                    print(Bandeira)    
-                    print("="*30)
-                    for i in range(len(objetos)):
-                        print(i,": ",objetos[i])
-                    resp=int(input('\nAdicone os eletrodomesticos da lista: '))
-                    objeto=objetos[resp]
-                    horas = int(input(f'Quantas horas por dia {objeto.lower()} fica ligado ? '))
+                        horas = int(
+                            input(f'Quantas horas por dia {objeto.lower()} fica ligado ? '))
+                        kwh = ((consumoObjetos[objeto] * 0.003) * horas)
+                        kwhTotal += kwh
+                        formulaValor = Bandeira * kwh
+                        valorTotal += formulaValor
+                        os.system('cls')
 
-                    kwh = ((consumoObjetos[objeto] * 0.003) * horas)
-                    kwhTotal += kwh
-                    formulaValor = Bandeira * kwh
-                    valorTotal += formulaValor
-                    os.system('cls')
+                # FUNÇAO QUE NAO PERMITE QUE O USUARIO USE + QUE 24 HORAS
+                        if horas > 24:
+                            print(
+                                '\033[31mSELECIONE UMA QUANTIDADE DE HORAS VÁLIDA (DE 0 A 24)\033[m')
+                            break
 
-                    if horas > 24:
-                        print('\033[31mSELECIONE UMA QUANTIDADE DE HORAS VÁLIDA (DE 0 A 24)\033[m')
-                        break
-
-
-                    print(f'A(o) {objeto.lower()} consumiu {kwh:.4f} kw e custou um total de {formulaValor:.2f} reais')
-                
+                        print(
+                            f'A(o) {objeto.lower()} consumiu {kwh:.4f} kw e custou um total de {formulaValor:.2f} reais')
                 elif regiao==3:
                     Bandeira=1.3184
-                    print(Bandeira)    
-                    print("="*30)
+                    printBandeira(Bandeira)
+
                     for i in range(len(objetos)):
                         print(i,": ",objetos[i])
-                    resp=int(input('\nAdicone os eletrodomesticos da lista: '))
-                    objeto=objetos[resp]
-                    horas = int(input(f'Quantas horas por dia {objeto.lower()} fica ligado ? '))
+                    resp = int(input(
+                        '\nAdicone um dos eletrodomesticos da lista ou \033[33mdigite 0 para adicionar um novo: \033[m'))
+                    objeto = objetos[resp]
 
-                    kwh = ((consumoObjetos[objeto] * 0.003) * horas)
-                    kwhTotal += kwh
-                    formulaValor = Bandeira * kwh
-                    valorTotal += formulaValor
-                    os.system('cls')
+                    if resp == 0:
+                        print('\nMENU ADICIONAR OBJETO')
+                        addObjeto()
+                    else:
 
-                    if horas > 24:
-                        print('\033[31mSELECIONE UMA QUANTIDADE DE HORAS VÁLIDA (DE 0 A 24)\033[m')
-                        break
+                        horas = int(
+                            input(f'Quantas horas por dia {objeto.lower()} fica ligado ? '))
+                        kwh = ((consumoObjetos[objeto] * 0.003) * horas)
+                        kwhTotal += kwh
+                        formulaValor = Bandeira * kwh
+                        valorTotal += formulaValor
+                        os.system('cls')
 
+                # FUNÇAO QUE NAO PERMITE QUE O USUARIO USE + QUE 24 HORAS
+                        if horas > 24:
+                            print(
+                                '\033[31mSELECIONE UMA QUANTIDADE DE HORAS VÁLIDA (DE 0 A 24)\033[m')
+                            break
 
-                    print(f'A(o) {objeto.lower()} consumiu {kwh:.4f} kw e custou um total de {formulaValor:.2f} reais')
-
+                        print(
+                            f'A(o) {objeto.lower()} consumiu {kwh:.4f} kw e custou um total de {formulaValor:.2f} reais')
                 
                 elif regiao==4:
                     Bandeira=1.72
-                    print(Bandeira)    
-                    print("="*30)
+                    printBandeira(Bandeira)
+
                     for i in range(len(objetos)):
                         print(i,": ",objetos[i])
-                    resp=int(input('\nAdicone os eletrodomesticos da lista: '))
-                    objeto=objetos[resp]
-                    horas = int(input(f'Quantas horas por dia {objeto.lower()} fica ligado ? '))
+                    resp = int(input(
+                        '\nAdicone um dos eletrodomesticos da lista ou \033[33mdigite 0 para adicionar um novo: \033[m'))
+                    objeto = objetos[resp]
 
-                    kwh = ((consumoObjetos[objeto] * 0.003) * horas)
-                    kwhTotal += kwh
-                    formulaValor = Bandeira * kwh
-                    valorTotal += formulaValor
-                    os.system('cls')
+                    if resp == 0:
+                        print('\nMENU ADICIONAR OBJETO')
+                        addObjeto()
+                    else:
 
-                    if horas > 24:
-                        print('\033[31mSELECIONE UMA QUANTIDADE DE HORAS VÁLIDA (DE 0 A 24)\033[m')
-                        break
+                        horas = int(
+                            input(f'Quantas horas por dia {objeto.lower()} fica ligado ? '))
+                        kwh = ((consumoObjetos[objeto] * 0.003) * horas)
+                        kwhTotal += kwh
+                        formulaValor = Bandeira * kwh
+                        valorTotal += formulaValor
+                        os.system('cls')
 
-                    
-                    print(f'A(o) {objeto.lower()} consumiu {kwh:.4f} kw e custou um total de {formulaValor:.2f} reais')
+                # FUNÇAO QUE NAO PERMITE QUE O USUARIO USE + QUE 24 HORAS
+                        if horas > 24:
+                            print(
+                                '\033[31mSELECIONE UMA QUANTIDADE DE HORAS VÁLIDA (DE 0 A 24)\033[m')
+                            break
+
+                        print(
+                            f'A(o) {objeto.lower()} consumiu {kwh:.4f} kw e custou um total de {formulaValor:.2f} reais')
                 
                 
                 elif regiao==5:
                     Bandeira=1.40
-                    print(Bandeira)    
-                    print("="*30)
+                    printBandeira(Bandeira)
+
                     for i in range(len(objetos)):
                         print(i,": ",objetos[i])
-                    resp=int(input('\nAdicone os eletrodomesticos da lista: '))
-                    objeto=objetos[resp]
-                    horas = int(input(f'Quantas horas por dia {objeto.lower()} fica ligado ? '))
+                    resp = int(input(
+                        '\nAdicone um dos eletrodomesticos da lista ou \033[33mdigite 0 para adicionar um novo: \033[m'))
+                    objeto = objetos[resp]
 
-                    kwh = ((consumoObjetos[objeto] * 0.003) * horas)
-                    kwhTotal += kwh
-                    formulaValor = Bandeira * kwh
-                    valorTotal += formulaValor
-                    os.system('cls')
+                    if resp == 0:
+                        print('\nMENU ADICIONAR OBJETO')
+                        addObjeto()
+                    else:
 
-                    if horas > 24:
-                        print('\033[31mSELECIONE UMA QUANTIDADE DE HORAS VÁLIDA (DE 0 A 24)\033[m')
-                        break
+                        horas = int(
+                            input(f'Quantas horas por dia {objeto.lower()} fica ligado ? '))
+                        kwh = ((consumoObjetos[objeto] * 0.003) * horas)
+                        kwhTotal += kwh
+                        formulaValor = Bandeira * kwh
+                        valorTotal += formulaValor
+                        os.system('cls')
 
-                    
-                    print(f'A(o) {objeto.lower()} consumiu {kwh:.4f} kw e custou um total de {formulaValor:.2f} reais')
+                # FUNÇAO QUE NAO PERMITE QUE O USUARIO USE + QUE 24 HORAS
+                        if horas > 24:
+                            print(
+                                '\033[31mSELECIONE UMA QUANTIDADE DE HORAS VÁLIDA (DE 0 A 24)\033[m')
+                            break
+
+                        print(
+                            f'A(o) {objeto.lower()} consumiu {kwh:.4f} kw e custou um total de {formulaValor:.2f} reais')
             
             
             elif opeletro == 2:
@@ -240,7 +315,18 @@ while opc!=3:
     regiao=int(input('INFORME A SUA REGIÃO: '))
 
     os.system('cls')
+
+    # SALVANDO USUARIO CADASTRADO
+    # usuarios=open('dados/usuarios.txt','w+')
+    # usuarios.write(nome)
+    # usuarios.write(';')
+    # usuarios.write(str(senha))
+    # usuarios.write('\n')
+    
+    # usuarios.close()
     print('\033[33mCADASTRO REALIZADO!\033[m')
 
   if opc==3:
     print("\033[33mVOLTE SEMPRE, LEMBRE-SE ECONOMIZE ENERGIA\033[m")
+ 
+    
